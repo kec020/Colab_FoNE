@@ -30,7 +30,7 @@ def extract_max_num_from_dataset(dataset_name):
     """
     Extracts the maximum number from the given dataset.
     """
-    dataset = load_dataset(dataset_name)
+    dataset = load_dataset(dataset_name, 'main')
     max_number = float('-inf')
     
     def find_max_number(example):
