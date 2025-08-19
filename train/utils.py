@@ -25,13 +25,6 @@ def handle_nan_loss(batch, before_decoder, data_idx, model, save_path="debug_nan
 
 def get_regular_embeddings(model, input_ids):
     """
-    Returns the token embeddings based on the model type.
+    Returns the token embeddings based on the model type, handling PEFT wrappers.
     """
-    if hasattr(model, 'transformer') and hasattr(model.transformer, 'wte'):
-        # For GPT-2 models
-        return model.transformer.wte(input_ids)
-    elif hasattr(model, 'model') and hasattr(model.model, 'embed_tokens'):
-        # For LLaMA models
-        return model.model.embed_tokens(input_ids)
-    else:
-        raise AttributeError(f"Cannot find token embeddings in the model: {type(model)}")
+    return model.get_input_embeddings()(input_ids)

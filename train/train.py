@@ -20,6 +20,7 @@ def train_fne(model, train_loader, fne, optimizer, scheduler, args, int_digit_le
         
         regular_embeddings = get_regular_embeddings(model, input_ids)
         fourier_embeddings = fne(scatter_tensor, len_gen=len_gen)
+        fourier_embeddings = fourier_embeddings.to(regular_embeddings.dtype)
         input_embeddings = regular_embeddings + fourier_embeddings
 
         outputs = model(inputs_embeds=input_embeddings, attention_mask=attention_mask, output_hidden_states=True)

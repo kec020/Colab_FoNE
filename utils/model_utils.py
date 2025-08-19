@@ -1,6 +1,7 @@
 import torch
 import logging
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
 
 # Model configuration table for custom initialization
 MODEL_CONFIG_TABLE = {
@@ -23,7 +24,8 @@ def load_model_and_tokenizer(
     device,
     train_from_scratch=False,
     size_level=-1,
-    use_digit_wise_tokenizer=False
+    use_digit_wise_tokenizer=False,
+    use_lora=False
 ):
     """
     Loads a model and tokenizer. Optionally initializes a new model from scratch
@@ -47,12 +49,42 @@ def load_model_and_tokenizer(
             model = AutoModelForCausalLM.from_config(config).to(device)
             logging.info(f"Model initialized from scratch with size level: {size_level}")
     else:
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype="auto",
-            cache_dir=cache_dir
-        ).to(device)
-        logging.info("Pre-trained model loaded!")
+        if use_lora:
+            logging.info("Loading model with QLoRA configuration for fine-tuning")
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.bfloat16
+            )
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                quantization_config=bnb_config,
+                torch_dtype=torch.bfloat16,
+                cache_dir=cache_dir,
+                device_map="auto",
+            )
+            model = prepare_model_for_kbit_training(model)
+        else:
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                torch_dtype="auto",
+                cache_dir=cache_dir
+            ).to(device)
+            logging.info("Pre-trained model loaded")
+
+    if use_lora and not train_from_scratch:
+        lora_config = LoraConfig(
+            r=16,
+            lora_alpha=32,
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+            lora_dropout=0.05,
+            bias="none",
+            task_type="CAUSAL_LM"
+        )
+        model = get_peft_model(model, lora_config)
+        logging.info("Applied LoRA configuration to the model.")
+        model.print_trainable_parameters()
+
 
     # ------------------------------------------------------------------
     # 2) Load the Tokenizer

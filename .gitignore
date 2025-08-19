@@ -12,6 +12,8 @@ dataset/llama*
 *safetensors
 wandb/
 
+hg_cache/
+
 # Distribution / packaging
 .Python
 build/

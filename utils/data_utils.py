@@ -42,8 +42,10 @@ def preprocess(entry, is_tabular, method='regular'):
 
     if is_tabular:
         question, label = preprocess_entry(entry)
-    else:
-        question, label = str(entry["question"]), float(entry["label"])
+    else: # adjusted for gsm8k dataset
+        question = str(entry['question'])
+        answer_str = str(entry['answer'])
+        label = float(answer_str.split('####')[-1].strip().replace(',', '')) 
 
     if method in ['fne', 'xval', 'vanilla']:
         label = float(label)

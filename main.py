@@ -12,13 +12,13 @@ from train.train_pipeline import (
 )
 
 # Set environment variables for Hugging Face and WandB tokens
-os.environ["HF_TOKEN"] = "{your_HF_token}"
-os.environ["WANDB_API_KEY"] = "{your_WandB_API_key}"
-wandb.login()
+#os.environ["HF_TOKEN"] = "{your_HF_token}"
+#os.environ["WANDB_API_KEY"] = "{your_WandB_API_key}"
+#wandb.login()
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Training LLMs with custom embeddings and Fourier loss on TS datasets"
+        description="Training LLMs with custom embeddings and Fourier loss"
     )
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training and testing')
     parser.add_argument('--epochs', type=int, default=5, help='Number of epochs for training')
@@ -27,8 +27,8 @@ def main():
     parser.add_argument('--len_gen_size', type=int, default=0, help='FNE: add k 0s after numbers to len gen')
     parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate')
     parser.add_argument('--name', type=str, default='', help='Log name')
-    parser.add_argument('--model', type=str, default='gpt2', help='Model name')
-    parser.add_argument('--dataset', type=str, default='Onlydrinkwater/language_math_10base', help='Dataset name')
+    parser.add_argument('--model', type=str, default='Qwen/Qwen2.5-7B-Instruct', help='Model name')
+    parser.add_argument('--dataset', type=str, default='openai/gsm8k', help='Dataset name')
     parser.add_argument('--train_from_scratch', action='store_true', help='Train the model from scratch without pre-trained weights')
     parser.add_argument('--use_digit_wise_tokenizer', action='store_true', help='Whether to use digit-wise tokenizer')
     parser.add_argument('--num_train_samples', type=int, default=None, help='Number of training samples to use')
@@ -41,6 +41,9 @@ def main():
     parser.add_argument('--clip', action='store_true', help='Enable clipping')
     parser.add_argument('--not_add_linear', action='store_true', help='Do not add linear layer after FNE')
     
+    # Added flag argument to enable LoRA to reduce memory usage
+    parser.add_argument('--use_lora', action='store_true', help='Use LoRA for training')
+
     args = parser.parse_args()
     
     # Convert period_base_list strings to floats (handling fractions)
@@ -55,7 +58,7 @@ def main():
         torch.cuda.manual_seed_all(args.seed)
     
     wandb.init(
-        project="FoNE_TS",
+        project="FoNE_Qwen",
         config=vars(args),
         name=run_name
     )
@@ -74,11 +77,12 @@ def main():
     # Load model and tokenizer
     model, tokenizer = load_model_and_tokenizer(
         model_name=args.model,
-        cache_dir="/home/tianyizhou/hg_cache",
+        cache_dir="./hg_cache", # user-agnostive cache directory
         device=device,
         train_from_scratch=args.train_from_scratch,
         size_level=args.model_size_level,
-        use_digit_wise_tokenizer=args.use_digit_wise_tokenizer
+        use_digit_wise_tokenizer=args.use_digit_wise_tokenizer,
+        use_lora=args.use_lora # pass new argument
     )
     
     # Run the training pipeline
