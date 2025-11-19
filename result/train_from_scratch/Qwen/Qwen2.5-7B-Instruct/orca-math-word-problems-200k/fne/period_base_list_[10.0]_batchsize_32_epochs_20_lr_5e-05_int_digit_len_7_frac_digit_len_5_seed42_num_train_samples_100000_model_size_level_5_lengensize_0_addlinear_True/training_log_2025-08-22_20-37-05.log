@@ -1,0 +1,11 @@
+2025-08-22 20:37:05 - INFO - result/train_from_scratch/Qwen/Qwen2.5-7B-Instruct/orca-math-word-problems-200k/fne/period_base_list_[10.0]_batchsize_32_epochs_20_lr_5e-05_int_digit_len_7_frac_digit_len_5_seed42_num_train_samples_100000_model_size_level_5_lengensize_0_addlinear_True
+2025-08-22 20:37:05 - INFO - Namespace(batch_size=32, epochs=20, int_digit_len=7, frac_digit_len=5, len_gen_size=0, lr=5e-05, name='', model='Qwen/Qwen2.5-7B-Instruct', dataset='microsoft/orca-math-word-problems-200k', train_from_scratch=True, use_digit_wise_tokenizer=False, num_train_samples=100000, num_test_samples=None, seed=42, model_size_level=5, method='fne', scheduler_name='cosine', period_base_list=[10.0], clip=False, not_add_linear=False, use_lora=False, add_linear=True)
+2025-08-22 20:37:05 - INFO - Dataset specified as single name: microsoft/orca-math-word-problems-200k
+2025-08-22 20:37:09 - INFO - Model initialized from scratch with size level: 5
+2025-08-22 20:37:09 - INFO - Standard tokenizer loaded.
+2025-08-22 20:37:09 - INFO - Expanded tokenizer by 397 dummy tokens to match model vocab_size=152064.
+2025-08-22 20:37:10 - INFO - Actual model size (total parameters): 105.01M
+2025-08-22 20:37:10 - INFO - Padding token ID: 151665
+2025-08-22 20:37:10 - INFO - [NUM] token ID: 151666
+2025-08-22 20:37:13 - INFO - Splitting train set into train and test splits.
+2025-08-22 20:37:13 - INFO - Train dataset length: 180031, Test dataset length: 20004

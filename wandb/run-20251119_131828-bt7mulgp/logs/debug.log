@@ -1,0 +1,26 @@
+2025-11-19 13:18:28,923 INFO    MainThread:14455 [wandb_setup.py:_flush():81] Current SDK version is 0.22.3
+2025-11-19 13:18:28,923 INFO    MainThread:14455 [wandb_setup.py:_flush():81] Configure stats pid to 14455
+2025-11-19 13:18:28,924 INFO    MainThread:14455 [wandb_setup.py:_flush():81] Loading settings from /root/.config/wandb/settings
+2025-11-19 13:18:28,924 INFO    MainThread:14455 [wandb_setup.py:_flush():81] Loading settings from /content/drive/MyDrive/Colab_FoNE/wandb/settings
+2025-11-19 13:18:28,925 INFO    MainThread:14455 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2025-11-19 13:18:28,925 INFO    MainThread:14455 [wandb_init.py:setup_run_log_directory():706] Logging user logs to /content/drive/MyDrive/Colab_FoNE/wandb/run-20251119_131828-bt7mulgp/logs/debug.log
+2025-11-19 13:18:28,925 INFO    MainThread:14455 [wandb_init.py:setup_run_log_directory():707] Logging internal logs to /content/drive/MyDrive/Colab_FoNE/wandb/run-20251119_131828-bt7mulgp/logs/debug-internal.log
+2025-11-19 13:18:28,925 INFO    MainThread:14455 [wandb_init.py:init():833] calling init triggers
+2025-11-19 13:18:28,925 INFO    MainThread:14455 [wandb_init.py:init():838] wandb.init called with sweep_config: {}
+config: {'batch_size': 32, 'epochs': 30, 'int_digit_len': 7, 'frac_digit_len': 5, 'len_gen_size': 0, 'lr': 0.0003, 'name': '', 'model': 'Qwen/Qwen2.5-7B-Instruct', 'dataset': '20000_subtraction_problems_1_tabular.csv', 'train_from_scratch': True, 'use_digit_wise_tokenizer': False, 'num_train_samples': None, 'num_test_samples': None, 'seed': 42, 'model_size_level': 6, 'method': 'fne', 'scheduler_name': 'cosine', 'period_base_list': [10.0], 'clip': False, 'not_add_linear': False, 'test_results_filename': 'fne_Qwen_Qwen2.5-7B-Instruct_20000_subtraction_problems_1_tabular.csv_seed42.csv', 'model_save_name': 'fne_Qwen_Qwen2.5-7B-Instruct_20000_subtraction_problems_1_tabular.csv_seed42', 'use_lora': False, 'add_linear': True, 'test_results_path': '/content/drive/MyDrive/Colab_FoNE/test_results/fne_Qwen_Qwen2.5-7B-Instruct_20000_subtraction_problems_1_tabular.csv_seed42.csv', 'model_save_path': '/content/drive/MyDrive/Colab_FoNE/models/fne_Qwen_Qwen2.5-7B-Instruct_20000_subtraction_problems_1_tabular.csv_seed42', '_wandb': {}}
+2025-11-19 13:18:28,925 INFO    MainThread:14455 [wandb_init.py:init():881] starting backend
+2025-11-19 13:18:29,145 INFO    MainThread:14455 [wandb_init.py:init():884] sending inform_init request
+2025-11-19 13:18:29,150 INFO    MainThread:14455 [wandb_init.py:init():892] backend started and connected
+2025-11-19 13:18:29,153 INFO    MainThread:14455 [wandb_init.py:init():962] updated telemetry
+2025-11-19 13:18:29,191 INFO    MainThread:14455 [wandb_init.py:init():986] communicating run to backend with 90.0 second timeout
+2025-11-19 13:18:29,949 INFO    MainThread:14455 [wandb_init.py:init():1033] starting run threads in backend
+2025-11-19 13:18:30,434 INFO    MainThread:14455 [wandb_run.py:_console_start():2506] atexit reg
+2025-11-19 13:18:30,435 INFO    MainThread:14455 [wandb_run.py:_redirect():2354] redirect: wrap_raw
+2025-11-19 13:18:30,436 INFO    MainThread:14455 [wandb_run.py:_redirect():2423] Wrapping output streams.
+2025-11-19 13:18:30,438 INFO    MainThread:14455 [wandb_run.py:_redirect():2446] Redirects installed.
+2025-11-19 13:18:30,440 INFO    MainThread:14455 [wandb_init.py:init():1073] run started, returning control to user process
+2025-11-19 13:30:55,286 INFO    MainThread:14455 [wandb_run.py:_finish():2272] finishing run ckychloe1756-university-of-california-san-diego/FoNE_Qwen/bt7mulgp
+2025-11-19 13:30:55,289 INFO    MainThread:14455 [wandb_run.py:_atexit_cleanup():2471] got exitcode: 0
+2025-11-19 13:30:55,290 INFO    MainThread:14455 [wandb_run.py:_restore():2453] restore
+2025-11-19 13:30:55,292 INFO    MainThread:14455 [wandb_run.py:_restore():2459] restore done
+2025-11-19 13:30:57,032 INFO    MainThread:14455 [wandb_run.py:_footer_sync_info():3835] logging synced files

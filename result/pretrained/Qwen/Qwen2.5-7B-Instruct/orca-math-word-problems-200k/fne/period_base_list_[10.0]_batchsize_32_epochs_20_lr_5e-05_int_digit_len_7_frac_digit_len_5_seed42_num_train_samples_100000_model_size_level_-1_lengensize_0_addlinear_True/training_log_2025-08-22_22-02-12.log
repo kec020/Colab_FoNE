@@ -1,0 +1,315 @@
+2025-08-22 22:02:12 - INFO - result/pretrained/Qwen/Qwen2.5-7B-Instruct/orca-math-word-problems-200k/fne/period_base_list_[10.0]_batchsize_32_epochs_20_lr_5e-05_int_digit_len_7_frac_digit_len_5_seed42_num_train_samples_100000_model_size_level_-1_lengensize_0_addlinear_True
+2025-08-22 22:02:12 - INFO - Namespace(batch_size=32, epochs=20, int_digit_len=7, frac_digit_len=5, len_gen_size=0, lr=5e-05, name='', model='Qwen/Qwen2.5-7B-Instruct', dataset='microsoft/orca-math-word-problems-200k', train_from_scratch=False, use_digit_wise_tokenizer=False, num_train_samples=100000, num_test_samples=10000, seed=42, model_size_level=-1, method='fne', scheduler_name='cosine', period_base_list=[10.0], clip=False, not_add_linear=False, use_lora=True, add_linear=True)
+2025-08-22 22:02:12 - INFO - Dataset specified as single name: microsoft/orca-math-word-problems-200k
+2025-08-22 22:02:12 - INFO - Loading model with QLoRA configuration for fine-tuning
+2025-08-22 22:02:13 - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-08-22 22:02:25 - INFO - Applied LoRA configuration to the model.
+2025-08-22 22:02:25 - INFO - Standard tokenizer loaded.
+2025-08-22 22:02:25 - INFO - Expanded tokenizer by 397 dummy tokens to match model vocab_size=152064.
+2025-08-22 22:02:25 - INFO - Actual model size (total parameters): 10.09M
+2025-08-22 22:02:25 - INFO - Padding token ID: 151665
+2025-08-22 22:02:25 - INFO - [NUM] token ID: 151666
+2025-08-22 22:02:26 - INFO - Splitting train set into train and test splits.
+2025-08-22 22:02:26 - INFO - Train dataset length: 180031, Test dataset length: 20004
+2025-08-22 22:03:08 - INFO - 2 data example: [{'input_ids': tensor([    41,  27576,   7391,   4279,    315,    806,   3220,    323,    256,
+        151666,    220,   2765,    518,    279,   1156,   3553,     11,   1221,
+          4279,    315,    806,   3220,    323,    256, 151666,    220,   2765,
+           518,    279,   2086,   3553,     11,    323,    566,   1030,    902,
+          3220,   2115,     13,   7379,   1246,   1753,   3220,    619,  27576,
+          1030,    518,    279,   7167,     13]), 'numbers': [300.0, 400.0], 'label': 2200.0}, {'input_ids': tensor([  9885,    279,    897,    315,    256, 151666,    220,    856,    256,
+        151666,    220,   3555,    374,    279,   1985,    315,   1493,   1378,
+          5109,     30]), 'numbers': [72516.0, 9999.0], 'label': 724987484.0}]
+2025-08-22 22:03:08 - INFO - period_list: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0]
+2025-08-22 22:03:08 - INFO - self.powers_of_ten: tensor([           1,           10,          100,         1000,        10000,
+              100000,      1000000,     10000000,    100000000,   1000000000,
+         10000000000, 100000000000], device='cuda:0')
+2025-08-22 22:03:08 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-22 22:03:08 - INFO - Starting Epoch 1/20
+2025-08-23 02:09:06 - INFO - avg Loss: 7.073184230651855
+2025-08-23 02:09:06 - INFO - Evaluation start
+2025-08-23 02:17:06 - INFO - Mispredictions (up to 5 examples):
+2025-08-23 02:17:06 - INFO - Predicted: 33.0, Actual: 68.0
+2025-08-23 02:17:06 - INFO - Predicted: 3.9, Actual: 12.0
+2025-08-23 02:17:06 - INFO - Predicted: 1.09, Actual: 0.52
+2025-08-23 02:17:06 - INFO - Predicted: 101.0, Actual: 1400.0
+2025-08-23 02:17:06 - INFO - Predicted: 2.09, Actual: 33.17
+2025-08-23 02:17:06 - INFO - Epoch                                   1         
+2025-08-23 02:17:06 - INFO - Train Loss                              7.0732
+2025-08-23 02:17:06 - INFO - Test Loss                               4.7575
+2025-08-23 02:17:06 - INFO - Whole Num Acc                           4.320000%
+2025-08-23 02:17:06 - INFO - Digit-wise Acc                          33.042241%
+2025-08-23 02:17:06 - INFO - MSE                                     nan
+2025-08-23 02:17:06 - INFO - R^2                                     nan
+2025-08-23 02:17:06 - INFO - Learning Rate                           0.000013
+2025-08-23 02:17:06 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-23 02:17:06 - INFO - Starting Epoch 2/20
+2025-08-23 06:10:55 - INFO - avg Loss: 4.540205372543335
+2025-08-23 06:10:55 - INFO - Evaluation start
+2025-08-23 06:18:55 - INFO - Mispredictions (up to 5 examples):
+2025-08-23 06:18:55 - INFO - Predicted: 34.0, Actual: 68.0
+2025-08-23 06:18:55 - INFO - Predicted: 16.0, Actual: 12.0
+2025-08-23 06:18:55 - INFO - Predicted: 19.0, Actual: 0.52
+2025-08-23 06:18:55 - INFO - Predicted: 900.0, Actual: 1400.0
+2025-08-23 06:18:55 - INFO - Predicted: 19.65, Actual: 33.17
+2025-08-23 06:18:55 - INFO - Epoch                                   2         
+2025-08-23 06:18:55 - INFO - Train Loss                              4.5402
+2025-08-23 06:18:55 - INFO - Test Loss                               4.3955
+2025-08-23 06:18:55 - INFO - Whole Num Acc                           4.580000%
+2025-08-23 06:18:55 - INFO - Digit-wise Acc                          36.899621%
+2025-08-23 06:18:55 - INFO - MSE                                     nan
+2025-08-23 06:18:55 - INFO - R^2                                     nan
+2025-08-23 06:18:55 - INFO - Learning Rate                           0.000025
+2025-08-23 06:18:55 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-23 06:18:55 - INFO - Starting Epoch 3/20
+2025-08-23 10:12:53 - INFO - avg Loss: 4.260265401306152
+2025-08-23 10:12:53 - INFO - Evaluation start
+2025-08-23 10:20:52 - INFO - Mispredictions (up to 5 examples):
+2025-08-23 10:20:52 - INFO - Predicted: 90.0, Actual: 68.0
+2025-08-23 10:20:52 - INFO - Predicted: 17.0, Actual: 12.0
+2025-08-23 10:20:52 - INFO - Predicted: 10.0, Actual: 0.52
+2025-08-23 10:20:52 - INFO - Predicted: 400.0, Actual: 1400.0
+2025-08-23 10:20:52 - INFO - Predicted: 0.56, Actual: 33.17
+2025-08-23 10:20:52 - INFO - Epoch                                   3         
+2025-08-23 10:20:52 - INFO - Train Loss                              4.2603
+2025-08-23 10:20:52 - INFO - Test Loss                               4.2352
+2025-08-23 10:20:52 - INFO - Whole Num Acc                           5.330000%
+2025-08-23 10:20:52 - INFO - Digit-wise Acc                          38.173353%
+2025-08-23 10:20:52 - INFO - MSE                                     nan
+2025-08-23 10:20:52 - INFO - R^2                                     nan
+2025-08-23 10:20:52 - INFO - Learning Rate                           0.000038
+2025-08-23 10:20:52 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-23 10:20:52 - INFO - Starting Epoch 4/20
+2025-08-23 14:14:37 - INFO - avg Loss: 4.053661651763916
+2025-08-23 14:14:37 - INFO - Evaluation start
+2025-08-23 14:22:37 - INFO - Mispredictions (up to 5 examples):
+2025-08-23 14:22:37 - INFO - Predicted: 54.0, Actual: 68.0
+2025-08-23 14:22:37 - INFO - Predicted: 14.0, Actual: 12.0
+2025-08-23 14:22:37 - INFO - Predicted: 10.0, Actual: 0.52
+2025-08-23 14:22:37 - INFO - Predicted: 300.0, Actual: 1400.0
+2025-08-23 14:22:37 - INFO - Predicted: 12.8, Actual: 33.17
+2025-08-23 14:22:37 - INFO - Epoch                                   4         
+2025-08-23 14:22:37 - INFO - Train Loss                              4.0537
+2025-08-23 14:22:37 - INFO - Test Loss                               4.1043
+2025-08-23 14:22:37 - INFO - Whole Num Acc                           4.250000%
+2025-08-23 14:22:37 - INFO - Digit-wise Acc                          39.620775%
+2025-08-23 14:22:37 - INFO - MSE                                     nan
+2025-08-23 14:22:37 - INFO - R^2                                     nan
+2025-08-23 14:22:37 - INFO - Learning Rate                           0.000050
+2025-08-23 14:22:37 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-23 14:22:37 - INFO - Starting Epoch 5/20
+2025-08-23 18:16:39 - INFO - avg Loss: 3.8634003161621093
+2025-08-23 18:16:39 - INFO - Evaluation start
+2025-08-23 18:24:40 - INFO - Mispredictions (up to 5 examples):
+2025-08-23 18:24:40 - INFO - Predicted: 65.0, Actual: 68.0
+2025-08-23 18:24:40 - INFO - Predicted: 7.0, Actual: 12.0
+2025-08-23 18:24:40 - INFO - Predicted: 29.0, Actual: 0.52
+2025-08-23 18:24:40 - INFO - Predicted: 4.0, Actual: 3.0
+2025-08-23 18:24:40 - INFO - Predicted: 1500.0, Actual: 1400.0
+2025-08-23 18:24:40 - INFO - Epoch                                   5         
+2025-08-23 18:24:40 - INFO - Train Loss                              3.8634
+2025-08-23 18:24:40 - INFO - Test Loss                               3.9816
+2025-08-23 18:24:40 - INFO - Whole Num Acc                           6.580000%
+2025-08-23 18:24:40 - INFO - Digit-wise Acc                          42.156177%
+2025-08-23 18:24:40 - INFO - MSE                                     nan
+2025-08-23 18:24:40 - INFO - R^2                                     nan
+2025-08-23 18:24:40 - INFO - Learning Rate                           0.000050
+2025-08-23 18:24:40 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-23 18:24:40 - INFO - Starting Epoch 6/20
+2025-08-23 22:18:29 - INFO - avg Loss: 3.663691065826416
+2025-08-23 22:18:29 - INFO - Evaluation start
+2025-08-23 22:26:31 - INFO - Mispredictions (up to 5 examples):
+2025-08-23 22:26:31 - INFO - Predicted: 54.0, Actual: 68.0
+2025-08-23 22:26:31 - INFO - Predicted: 0.0, Actual: 12.0
+2025-08-23 22:26:31 - INFO - Predicted: 40.0, Actual: 0.52
+2025-08-23 22:26:31 - INFO - Predicted: 400.0, Actual: 1400.0
+2025-08-23 22:26:31 - INFO - Predicted: 11.9, Actual: 33.17
+2025-08-23 22:26:31 - INFO - Epoch                                   6         
+2025-08-23 22:26:31 - INFO - Train Loss                              3.6637
+2025-08-23 22:26:31 - INFO - Test Loss                               3.9809
+2025-08-23 22:26:31 - INFO - Whole Num Acc                           8.120000%
+2025-08-23 22:26:31 - INFO - Digit-wise Acc                          43.058403%
+2025-08-23 22:26:31 - INFO - MSE                                     nan
+2025-08-23 22:26:31 - INFO - R^2                                     nan
+2025-08-23 22:26:31 - INFO - Learning Rate                           0.000048
+2025-08-23 22:26:31 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-23 22:26:31 - INFO - Starting Epoch 7/20
+2025-08-24 02:20:18 - INFO - avg Loss: 3.482720120391846
+2025-08-24 02:20:18 - INFO - Evaluation start
+2025-08-24 02:28:18 - INFO - Mispredictions (up to 5 examples):
+2025-08-24 02:28:18 - INFO - Predicted: 64.0, Actual: 68.0
+2025-08-24 02:28:18 - INFO - Predicted: 10.0, Actual: 12.0
+2025-08-24 02:28:18 - INFO - Predicted: 0.0, Actual: 0.52
+2025-08-24 02:28:18 - INFO - Predicted: 400.0, Actual: 1400.0
+2025-08-24 02:28:18 - INFO - Predicted: 25.91, Actual: 33.17
+2025-08-24 02:28:18 - INFO - Epoch                                   7         
+2025-08-24 02:28:18 - INFO - Train Loss                              3.4827
+2025-08-24 02:28:18 - INFO - Test Loss                               3.8870
+2025-08-24 02:28:18 - INFO - Whole Num Acc                           8.840000%
+2025-08-24 02:28:18 - INFO - Digit-wise Acc                          44.481702%
+2025-08-24 02:28:18 - INFO - MSE                                     nan
+2025-08-24 02:28:18 - INFO - R^2                                     nan
+2025-08-24 02:28:18 - INFO - Learning Rate                           0.000046
+2025-08-24 02:28:18 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-24 02:28:18 - INFO - Starting Epoch 8/20
+2025-08-24 06:22:16 - INFO - avg Loss: 3.3165096798706055
+2025-08-24 06:22:16 - INFO - Evaluation start
+2025-08-24 06:30:16 - INFO - Mispredictions (up to 5 examples):
+2025-08-24 06:30:16 - INFO - Predicted: 74.0, Actual: 68.0
+2025-08-24 06:30:16 - INFO - Predicted: 10.0, Actual: 12.0
+2025-08-24 06:30:16 - INFO - Predicted: 40.0, Actual: 0.52
+2025-08-24 06:30:16 - INFO - Predicted: 13.969999999999999, Actual: 33.17
+2025-08-24 06:30:16 - INFO - Predicted: 12.67, Actual: 17.06
+2025-08-24 06:30:16 - INFO - Epoch                                   8         
+2025-08-24 06:30:16 - INFO - Train Loss                              3.3165
+2025-08-24 06:30:16 - INFO - Test Loss                               3.8535
+2025-08-24 06:30:16 - INFO - Whole Num Acc                           8.690000%
+2025-08-24 06:30:16 - INFO - Digit-wise Acc                          44.901455%
+2025-08-24 06:30:16 - INFO - MSE                                     nan
+2025-08-24 06:30:16 - INFO - R^2                                     nan
+2025-08-24 06:30:16 - INFO - Learning Rate                           0.000043
+2025-08-24 06:30:16 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-24 06:30:16 - INFO - Starting Epoch 9/20
+2025-08-24 10:23:56 - INFO - avg Loss: 3.154994529571533
+2025-08-24 10:23:56 - INFO - Evaluation start
+2025-08-24 10:31:56 - INFO - Mispredictions (up to 5 examples):
+2025-08-24 10:31:56 - INFO - Predicted: 63.0, Actual: 68.0
+2025-08-24 10:31:56 - INFO - Predicted: 8.0, Actual: 12.0
+2025-08-24 10:31:56 - INFO - Predicted: 50.0, Actual: 0.52
+2025-08-24 10:31:56 - INFO - Predicted: 19.0, Actual: 33.17
+2025-08-24 10:31:56 - INFO - Predicted: 12.8, Actual: 17.06
+2025-08-24 10:31:56 - INFO - Epoch                                   9         
+2025-08-24 10:31:56 - INFO - Train Loss                              3.1550
+2025-08-24 10:31:56 - INFO - Test Loss                               3.8816
+2025-08-24 10:31:56 - INFO - Whole Num Acc                           10.650000%
+2025-08-24 10:31:56 - INFO - Digit-wise Acc                          46.221021%
+2025-08-24 10:31:56 - INFO - MSE                                     nan
+2025-08-24 10:31:56 - INFO - R^2                                     nan
+2025-08-24 10:31:56 - INFO - Learning Rate                           0.000039
+2025-08-24 10:31:56 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-24 10:31:56 - INFO - Starting Epoch 10/20
+2025-08-24 14:25:37 - INFO - avg Loss: 3.0123640660095217
+2025-08-24 14:25:37 - INFO - Evaluation start
+2025-08-24 14:33:38 - INFO - Mispredictions (up to 5 examples):
+2025-08-24 14:33:38 - INFO - Predicted: 63.0, Actual: 68.0
+2025-08-24 14:33:38 - INFO - Predicted: 8.0, Actual: 12.0
+2025-08-24 14:33:38 - INFO - Predicted: 49.0, Actual: 0.52
+2025-08-24 14:33:38 - INFO - Predicted: 26.96, Actual: 33.17
+2025-08-24 14:33:38 - INFO - Predicted: 22.45, Actual: 17.06
+2025-08-24 14:33:38 - INFO - Epoch                                   10        
+2025-08-24 14:33:38 - INFO - Train Loss                              3.0124
+2025-08-24 14:33:38 - INFO - Test Loss                               3.9284
+2025-08-24 14:33:38 - INFO - Whole Num Acc                           10.660000%
+2025-08-24 14:33:38 - INFO - Digit-wise Acc                          45.818156%
+2025-08-24 14:33:38 - INFO - MSE                                     nan
+2025-08-24 14:33:38 - INFO - R^2                                     nan
+2025-08-24 14:33:38 - INFO - Learning Rate                           0.000035
+2025-08-24 14:33:38 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-24 14:33:38 - INFO - Starting Epoch 11/20
+2025-08-24 18:27:47 - INFO - avg Loss: 2.8665254977035524
+2025-08-24 18:27:47 - INFO - Evaluation start
+2025-08-24 18:35:49 - INFO - Mispredictions (up to 5 examples):
+2025-08-24 18:35:49 - INFO - Predicted: 67.0, Actual: 68.0
+2025-08-24 18:35:49 - INFO - Predicted: 8.0, Actual: 12.0
+2025-08-24 18:35:49 - INFO - Predicted: 38.0, Actual: 0.52
+2025-08-24 18:35:49 - INFO - Predicted: 4.0, Actual: 3.0
+2025-08-24 18:35:49 - INFO - Predicted: 16.06, Actual: 33.17
+2025-08-24 18:35:49 - INFO - Epoch                                   11        
+2025-08-24 18:35:49 - INFO - Train Loss                              2.8665
+2025-08-24 18:35:49 - INFO - Test Loss                               4.0209
+2025-08-24 18:35:49 - INFO - Whole Num Acc                           11.130000%
+2025-08-24 18:35:49 - INFO - Digit-wise Acc                          46.809640%
+2025-08-24 18:35:49 - INFO - MSE                                     nan
+2025-08-24 18:35:49 - INFO - R^2                                     nan
+2025-08-24 18:35:49 - INFO - Learning Rate                           0.000030
+2025-08-24 18:35:49 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-24 18:35:49 - INFO - Starting Epoch 12/20
+2025-08-24 22:29:33 - INFO - avg Loss: 2.7261477904510496
+2025-08-24 22:29:33 - INFO - Evaluation start
+2025-08-24 22:37:34 - INFO - Mispredictions (up to 5 examples):
+2025-08-24 22:37:34 - INFO - Predicted: 60.0, Actual: 68.0
+2025-08-24 22:37:34 - INFO - Predicted: 7.0, Actual: 12.0
+2025-08-24 22:37:34 - INFO - Predicted: 51.0, Actual: 0.52
+2025-08-24 22:37:34 - INFO - Predicted: 4.0, Actual: 3.0
+2025-08-24 22:37:34 - INFO - Predicted: 26.93, Actual: 33.17
+2025-08-24 22:37:34 - INFO - Epoch                                   12        
+2025-08-24 22:37:34 - INFO - Train Loss                              2.7261
+2025-08-24 22:37:34 - INFO - Test Loss                               4.0280
+2025-08-24 22:37:34 - INFO - Whole Num Acc                           11.990000%
+2025-08-24 22:37:34 - INFO - Digit-wise Acc                          47.460980%
+2025-08-24 22:37:34 - INFO - MSE                                     nan
+2025-08-24 22:37:34 - INFO - R^2                                     nan
+2025-08-24 22:37:34 - INFO - Learning Rate                           0.000025
+2025-08-24 22:37:34 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-24 22:37:34 - INFO - Starting Epoch 13/20
+2025-08-25 02:31:04 - INFO - avg Loss: 2.590125706710815
+2025-08-25 02:31:04 - INFO - Evaluation start
+2025-08-25 02:39:05 - INFO - Mispredictions (up to 5 examples):
+2025-08-25 02:39:05 - INFO - Predicted: 63.0, Actual: 68.0
+2025-08-25 02:39:05 - INFO - Predicted: 8.0, Actual: 12.0
+2025-08-25 02:39:05 - INFO - Predicted: 45.0, Actual: 0.52
+2025-08-25 02:39:05 - INFO - Predicted: 4.0, Actual: 3.0
+2025-08-25 02:39:05 - INFO - Predicted: 16.009999999999998, Actual: 33.17
+2025-08-25 02:39:05 - INFO - Epoch                                   13        
+2025-08-25 02:39:05 - INFO - Train Loss                              2.5901
+2025-08-25 02:39:05 - INFO - Test Loss                               4.1299
+2025-08-25 02:39:05 - INFO - Whole Num Acc                           12.320000%
+2025-08-25 02:39:05 - INFO - Digit-wise Acc                          48.245000%
+2025-08-25 02:39:05 - INFO - MSE                                     nan
+2025-08-25 02:39:05 - INFO - R^2                                     nan
+2025-08-25 02:39:05 - INFO - Learning Rate                           0.000020
+2025-08-25 02:39:05 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-25 02:39:05 - INFO - Starting Epoch 14/20
+2025-08-25 06:32:31 - INFO - avg Loss: 2.4580949432754515
+2025-08-25 06:32:31 - INFO - Evaluation start
+2025-08-25 06:40:31 - INFO - Mispredictions (up to 5 examples):
+2025-08-25 06:40:31 - INFO - Predicted: 61.0, Actual: 68.0
+2025-08-25 06:40:31 - INFO - Predicted: 8.0, Actual: 12.0
+2025-08-25 06:40:31 - INFO - Predicted: 34.0, Actual: 0.52
+2025-08-25 06:40:31 - INFO - Predicted: 4.0, Actual: 3.0
+2025-08-25 06:40:31 - INFO - Predicted: 16.95, Actual: 33.17
+2025-08-25 06:40:31 - INFO - Epoch                                   14        
+2025-08-25 06:40:31 - INFO - Train Loss                              2.4581
+2025-08-25 06:40:31 - INFO - Test Loss                               4.1924
+2025-08-25 06:40:31 - INFO - Whole Num Acc                           12.710000%
+2025-08-25 06:40:31 - INFO - Digit-wise Acc                          48.228114%
+2025-08-25 06:40:31 - INFO - MSE                                     nan
+2025-08-25 06:40:31 - INFO - R^2                                     nan
+2025-08-25 06:40:31 - INFO - Learning Rate                           0.000015
+2025-08-25 06:40:31 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-25 06:40:31 - INFO - Starting Epoch 15/20
+2025-08-25 10:34:21 - INFO - avg Loss: 2.336754553604126
+2025-08-25 10:34:21 - INFO - Evaluation start
+2025-08-25 10:42:21 - INFO - Mispredictions (up to 5 examples):
+2025-08-25 10:42:21 - INFO - Predicted: 62.0, Actual: 68.0
+2025-08-25 10:42:21 - INFO - Predicted: 8.0, Actual: 12.0
+2025-08-25 10:42:21 - INFO - Predicted: 45.0, Actual: 0.52
+2025-08-25 10:42:21 - INFO - Predicted: 5.0, Actual: 3.0
+2025-08-25 10:42:21 - INFO - Predicted: 16.92, Actual: 33.17
+2025-08-25 10:42:21 - INFO - Epoch                                   15        
+2025-08-25 10:42:21 - INFO - Train Loss                              2.3368
+2025-08-25 10:42:21 - INFO - Test Loss                               4.3137
+2025-08-25 10:42:21 - INFO - Whole Num Acc                           13.140000%
+2025-08-25 10:42:21 - INFO - Digit-wise Acc                          48.616505%
+2025-08-25 10:42:21 - INFO - MSE                                     nan
+2025-08-25 10:42:21 - INFO - R^2                                     nan
+2025-08-25 10:42:21 - INFO - Learning Rate                           0.000011
+2025-08-25 10:42:21 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-25 10:42:21 - INFO - Starting Epoch 16/20
+2025-08-25 14:35:50 - INFO - avg Loss: 2.232166668395996
+2025-08-25 14:35:50 - INFO - Evaluation start
+2025-08-25 14:43:51 - INFO - Mispredictions (up to 5 examples):
+2025-08-25 14:43:51 - INFO - Predicted: 62.0, Actual: 68.0
+2025-08-25 14:43:51 - INFO - Predicted: 8.0, Actual: 12.0
+2025-08-25 14:43:51 - INFO - Predicted: 45.0, Actual: 0.52
+2025-08-25 14:43:51 - INFO - Predicted: 5.0, Actual: 3.0
+2025-08-25 14:43:51 - INFO - Predicted: 16.09, Actual: 33.17
+2025-08-25 14:43:51 - INFO - Epoch                                   16        
+2025-08-25 14:43:51 - INFO - Train Loss                              2.2322
+2025-08-25 14:43:51 - INFO - Test Loss                               4.4211
+2025-08-25 14:43:51 - INFO - Whole Num Acc                           13.330000%
+2025-08-25 14:43:51 - INFO - Digit-wise Acc                          48.614093%
+2025-08-25 14:43:51 - INFO - MSE                                     nan
+2025-08-25 14:43:51 - INFO - R^2                                     nan
+2025-08-25 14:43:51 - INFO - Learning Rate                           0.000007
+2025-08-25 14:43:51 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-25 14:43:51 - INFO - Starting Epoch 17/20

@@ -1,0 +1,139 @@
+_wandb:
+    value:
+        cli_version: 0.22.3
+        e:
+            3ivg2fl1m45h5gr1awpw1jos5vkecwlk:
+                args:
+                    - --dataset
+                    - 20000_addition_problems_1_tabular.csv
+                    - --train_from_scratch
+                    - --epochs
+                    - "30"
+                    - --model_size_level
+                    - "6"
+                    - --lr
+                    - "3e-4"
+                codePath: main.py
+                codePathLocal: main.py
+                cpu_count: 6
+                cpu_count_logical: 12
+                cudaVersion: "12.4"
+                disk:
+                    /:
+                        total: "253055008768"
+                        used: "41014255616"
+                email: ckychloe1756@gmail.com
+                executable: /usr/bin/python3
+                git:
+                    commit: 7b6fed0d66df845df0a6f6c1ae99bda943e7579f
+                    remote: https://github.com/kec020/Colab_FoNE.git
+                gpu: NVIDIA L4
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Ada
+                      cudaCores: 7424
+                      memoryTotal: "24152899584"
+                      name: NVIDIA L4
+                      uuid: GPU-8d72a3a7-a0c2-bf9b-8fab-1d354b2f164d
+                host: 1d56abdee341
+                memory:
+                    total: "56863338496"
+                os: Linux-6.6.105+-x86_64-with-glibc2.35
+                program: /content/drive/MyDrive/Colab_FoNE/main.py
+                python: CPython 3.12.12
+                root: /content/drive/MyDrive/Colab_FoNE
+                startedAt: "2025-11-19T12:31:11.473761Z"
+                writerId: 3ivg2fl1m45h5gr1awpw1jos5vkecwlk
+        m: []
+        python_version: 3.12.12
+        t:
+            "1":
+                - 1
+                - 2
+                - 3
+                - 5
+                - 11
+                - 12
+                - 41
+                - 49
+                - 51
+                - 53
+                - 71
+                - 98
+                - 105
+            "2":
+                - 1
+                - 2
+                - 3
+                - 5
+                - 11
+                - 12
+                - 41
+                - 49
+                - 51
+                - 53
+                - 71
+                - 98
+                - 105
+            "3":
+                - 2
+                - 13
+                - 16
+            "4": 3.12.12
+            "5": 0.22.3
+            "6": 4.57.1
+            "12": 0.22.3
+            "13": linux-x86_64
+add_linear:
+    value: true
+batch_size:
+    value: 32
+clip:
+    value: false
+dataset:
+    value: 20000_addition_problems_1_tabular.csv
+epochs:
+    value: 30
+frac_digit_len:
+    value: 5
+int_digit_len:
+    value: 7
+len_gen_size:
+    value: 0
+lr:
+    value: 0.0003
+method:
+    value: fne
+model:
+    value: Qwen/Qwen2.5-7B-Instruct
+model_save_name:
+    value: fne_Qwen_Qwen2.5-7B-Instruct_20000_addition_problems_1_tabular.csv_seed42
+model_save_path:
+    value: /content/drive/MyDrive/Colab_FoNE/models/fne_Qwen_Qwen2.5-7B-Instruct_20000_addition_problems_1_tabular.csv_seed42
+model_size_level:
+    value: 6
+name:
+    value: ""
+not_add_linear:
+    value: false
+num_test_samples:
+    value: null
+num_train_samples:
+    value: null
+period_base_list:
+    value:
+        - 10
+scheduler_name:
+    value: cosine
+seed:
+    value: 42
+test_results_filename:
+    value: fne_Qwen_Qwen2.5-7B-Instruct_20000_addition_problems_1_tabular.csv_seed42.csv
+test_results_path:
+    value: /content/drive/MyDrive/Colab_FoNE/test_results/fne_Qwen_Qwen2.5-7B-Instruct_20000_addition_problems_1_tabular.csv_seed42.csv
+train_from_scratch:
+    value: true
+use_digit_wise_tokenizer:
+    value: false
+use_lora:
+    value: false

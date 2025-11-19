@@ -1,0 +1,25 @@
+2025-08-22 22:00:30 - INFO - result/pretrained/Qwen/Qwen2.5-7B-Instruct/orca-math-word-problems-200k/fne/period_base_list_[10.0]_batchsize_32_epochs_20_lr_5e-05_int_digit_len_7_frac_digit_len_5_seed42_num_train_samples_100000_model_size_level_-1_lengensize_0_addlinear_True
+2025-08-22 22:00:30 - INFO - Namespace(batch_size=32, epochs=20, int_digit_len=7, frac_digit_len=5, len_gen_size=0, lr=5e-05, name='', model='Qwen/Qwen2.5-7B-Instruct', dataset='microsoft/orca-math-word-problems-200k', train_from_scratch=False, use_digit_wise_tokenizer=False, num_train_samples=100000, num_test_samples=10000, seed=42, model_size_level=-1, method='fne', scheduler_name='cosine', period_base_list=[10.0], clip=False, not_add_linear=False, use_lora=False, add_linear=True)
+2025-08-22 22:00:30 - INFO - Dataset specified as single name: microsoft/orca-math-word-problems-200k
+2025-08-22 22:00:33 - INFO - Pre-trained model loaded
+2025-08-22 22:00:33 - INFO - Standard tokenizer loaded.
+2025-08-22 22:00:33 - INFO - Expanded tokenizer by 397 dummy tokens to match model vocab_size=152064.
+2025-08-22 22:00:34 - INFO - Actual model size (total parameters): 7615.62M
+2025-08-22 22:00:34 - INFO - Padding token ID: 151665
+2025-08-22 22:00:34 - INFO - [NUM] token ID: 151666
+2025-08-22 22:00:34 - INFO - Splitting train set into train and test splits.
+2025-08-22 22:00:34 - INFO - Train dataset length: 180031, Test dataset length: 20004
+2025-08-22 22:01:16 - INFO - 2 data example: [{'input_ids': tensor([    41,  27576,   7391,   4279,    315,    806,   3220,    323,    256,
+        151666,    220,   2765,    518,    279,   1156,   3553,     11,   1221,
+          4279,    315,    806,   3220,    323,    256, 151666,    220,   2765,
+           518,    279,   2086,   3553,     11,    323,    566,   1030,    902,
+          3220,   2115,     13,   7379,   1246,   1753,   3220,    619,  27576,
+          1030,    518,    279,   7167,     13]), 'numbers': [300.0, 400.0], 'label': 2200.0}, {'input_ids': tensor([  9885,    279,    897,    315,    256, 151666,    220,    856,    256,
+        151666,    220,   3555,    374,    279,   1985,    315,   1493,   1378,
+          5109,     30]), 'numbers': [72516.0, 9999.0], 'label': 724987484.0}]
+2025-08-22 22:01:16 - INFO - period_list: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0]
+2025-08-22 22:01:16 - INFO - self.powers_of_ten: tensor([           1,           10,          100,         1000,        10000,
+              100000,      1000000,     10000000,    100000000,   1000000000,
+         10000000000, 100000000000], device='cuda:0')
+2025-08-22 22:01:16 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-22 22:01:16 - INFO - Starting Epoch 1/20

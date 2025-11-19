@@ -1,0 +1,25 @@
+2025-08-21 22:55:31 - INFO - result/pretrained/Qwen/Qwen2.5-7B-Instruct/gsm8k/fne/period_base_list_[10.0]_batchsize_32_epochs_5_lr_5e-05_int_digit_len_5_frac_digit_len_5_seed42_num_train_samples_None_model_size_level_-1_lengensize_0_addlinear_True
+2025-08-21 22:55:31 - INFO - Namespace(batch_size=32, epochs=5, int_digit_len=5, frac_digit_len=5, len_gen_size=0, lr=5e-05, name='', model='Qwen/Qwen2.5-7B-Instruct', dataset='openai/gsm8k', train_from_scratch=False, use_digit_wise_tokenizer=False, num_train_samples=None, num_test_samples=None, seed=42, model_size_level=-1, method='fne', scheduler_name='cosine', period_base_list=[10.0], clip=False, not_add_linear=False, use_lora=True, add_linear=True)
+2025-08-21 22:55:31 - INFO - Dataset specified as single name: openai/gsm8k
+2025-08-21 22:55:31 - INFO - Loading model with QLoRA configuration for fine-tuning
+2025-08-21 22:55:32 - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-08-21 22:55:44 - INFO - Applied LoRA configuration to the model.
+2025-08-21 22:55:44 - INFO - Standard tokenizer loaded.
+2025-08-21 22:55:45 - INFO - Expanded tokenizer by 397 dummy tokens to match model vocab_size=152064.
+2025-08-21 22:55:45 - INFO - Actual model size (total parameters): 10.09M
+2025-08-21 22:55:45 - INFO - Padding token ID: 151665
+2025-08-21 22:55:45 - INFO - [NUM] token ID: 151666
+2025-08-21 22:55:45 - INFO - Train dataset length: 7473, Test dataset length: 1319
+2025-08-21 22:55:47 - INFO - 2 data example: [{'input_ids': tensor([    45,   4212,    685,   6088,  26111,    311,    256, 151666,    220,
+           315,   1059,   4780,    304,   5813,     11,    323,   1221,   1340,
+          6088,   4279,    438,   1657,  26111,    304,   3217,     13,   2585,
+          1657,  26111,   1521,  41601,    685,   4559,  30055,    304,   5813,
+           323,   3217,     30]), 'numbers': [48.0], 'label': 72.0}, {'input_ids': tensor([    54,    826,  63759,    400,    220, 151666,    220,    458,   6460,
+           369,  70583,  14810,     13,  60033,     11,   1340,   1101,   1521,
+           256, 151666,    220,   4420,    315,  70583,  14810,     13,   2585,
+          1753,   1521,   1340,   7232,     30]), 'numbers': [12.0, 50.0], 'label': 10.0}]
+2025-08-21 22:55:47 - INFO - period_list: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0, 100000.0]
+2025-08-21 22:55:48 - INFO - self.powers_of_ten: tensor([         1,         10,        100,       1000,      10000,     100000,
+           1000000,   10000000,  100000000, 1000000000], device='cuda:0')
+2025-08-21 22:55:48 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-21 22:55:48 - INFO - Starting Epoch 1/5

@@ -1,0 +1,73 @@
+2025-08-22 06:01:05 - INFO - result/pretrained/Qwen/Qwen2.5-7B-Instruct/1000addition/fne/period_base_list_[10.0]_batchsize_32_epochs_5_lr_5e-05_int_digit_len_7_frac_digit_len_5_seed42_num_train_samples_None_model_size_level_-1_lengensize_0_addlinear_True
+2025-08-22 06:01:05 - INFO - Namespace(batch_size=32, epochs=5, int_digit_len=7, frac_digit_len=5, len_gen_size=0, lr=5e-05, name='', model='Qwen/Qwen2.5-7B-Instruct', dataset='Onlydrinkwater/1000addition', train_from_scratch=False, use_digit_wise_tokenizer=False, num_train_samples=None, num_test_samples=None, seed=42, model_size_level=-1, method='fne', scheduler_name='cosine', period_base_list=[10.0], clip=False, not_add_linear=False, use_lora=True, add_linear=True)
+2025-08-22 06:01:05 - INFO - Dataset specified as single name: Onlydrinkwater/1000addition
+2025-08-22 06:01:05 - INFO - Loading model with QLoRA configuration for fine-tuning
+2025-08-22 06:01:06 - INFO - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-08-22 06:01:18 - INFO - Applied LoRA configuration to the model.
+2025-08-22 06:01:18 - INFO - Standard tokenizer loaded.
+2025-08-22 06:01:19 - INFO - Expanded tokenizer by 397 dummy tokens to match model vocab_size=152064.
+2025-08-22 06:01:19 - INFO - Actual model size (total parameters): 10.09M
+2025-08-22 06:01:19 - INFO - Padding token ID: 151665
+2025-08-22 06:01:19 - INFO - [NUM] token ID: 151666
+2025-08-22 06:01:19 - INFO - Train dataset length: 72000, Test dataset length: 20000
+2025-08-22 06:01:32 - INFO - 2 data example: [{'input_ids': tensor([   220, 151666,    220,    488,    256, 151666,    220,    284,    220]), 'numbers': [678.0, 764.0], 'label': 1442.0}, {'input_ids': tensor([   220, 151666,    220,    488,    256, 151666,    220,    284,    220]), 'numbers': [365.0, 950.0], 'label': 1315.0}]
+2025-08-22 06:01:32 - INFO - period_list: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0]
+2025-08-22 06:01:32 - INFO - self.powers_of_ten: tensor([           1,           10,          100,         1000,        10000,
+              100000,      1000000,     10000000,    100000000,   1000000000,
+         10000000000, 100000000000], device='cuda:0')
+2025-08-22 06:01:32 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-22 06:01:32 - INFO - Starting Epoch 1/5
+2025-08-22 06:24:17 - INFO - avg Loss: 0.5915927102035946
+2025-08-22 06:24:17 - INFO - Evaluation start
+2025-08-22 06:26:29 - INFO - Mispredictions (up to 5 examples):
+2025-08-22 06:26:29 - INFO - Predicted: 1460.0, Actual: 1470.0
+2025-08-22 06:26:29 - INFO - Predicted: 1450.0, Actual: 1460.0
+2025-08-22 06:26:29 - INFO - Predicted: 1689.0, Actual: 1679.0
+2025-08-22 06:26:29 - INFO - Predicted: 290.0, Actual: 200.0
+2025-08-22 06:26:29 - INFO - Predicted: 1251.0, Actual: 1261.0
+2025-08-22 06:26:29 - INFO - Epoch                                   1         
+2025-08-22 06:26:29 - INFO - Train Loss                              0.5916
+2025-08-22 06:26:29 - INFO - Test Loss                               0.2350
+2025-08-22 06:26:29 - INFO - Whole Num Acc                           65.545000%
+2025-08-22 06:26:29 - INFO - Digit-wise Acc                          91.515973%
+2025-08-22 06:26:29 - INFO - MSE                                     13706.787250
+2025-08-22 06:26:29 - INFO - R^2                                     0.916998198446035
+2025-08-22 06:26:29 - INFO - Learning Rate                           0.000050
+2025-08-22 06:26:29 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-22 06:26:29 - INFO - Starting Epoch 2/5
+2025-08-22 06:49:13 - INFO - avg Loss: 0.19785149629910787
+2025-08-22 06:49:13 - INFO - Evaluation start
+2025-08-22 06:51:25 - INFO - Mispredictions (up to 5 examples):
+2025-08-22 06:51:25 - INFO - Predicted: 1460.0, Actual: 1470.0
+2025-08-22 06:51:25 - INFO - Predicted: 290.0, Actual: 200.0
+2025-08-22 06:51:25 - INFO - Predicted: 1305.0, Actual: 1405.0
+2025-08-22 06:51:25 - INFO - Predicted: 1177.0, Actual: 1277.0
+2025-08-22 06:51:25 - INFO - Predicted: 1714.0, Actual: 1704.0
+2025-08-22 06:51:25 - INFO - Epoch                                   2         
+2025-08-22 06:51:25 - INFO - Train Loss                              0.1979
+2025-08-22 06:51:25 - INFO - Test Loss                               0.1607
+2025-08-22 06:51:25 - INFO - Whole Num Acc                           90.385000%
+2025-08-22 06:51:25 - INFO - Digit-wise Acc                          97.460341%
+2025-08-22 06:51:25 - INFO - MSE                                     8508.059000
+2025-08-22 06:51:25 - INFO - R^2                                     0.948479230628795
+2025-08-22 06:51:25 - INFO - Learning Rate                           0.000043
+2025-08-22 06:51:25 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-22 06:51:25 - INFO - Starting Epoch 3/5
+2025-08-22 07:14:09 - INFO - avg Loss: 0.1493777082628674
+2025-08-22 07:14:09 - INFO - Evaluation start
+2025-08-22 07:16:21 - INFO - Mispredictions (up to 5 examples):
+2025-08-22 07:16:21 - INFO - Predicted: 1798.0, Actual: 1698.0
+2025-08-22 07:16:21 - INFO - Predicted: 1700.0, Actual: 1710.0
+2025-08-22 07:16:21 - INFO - Predicted: 1100.0, Actual: 1200.0
+2025-08-22 07:16:21 - INFO - Predicted: 279.0, Actual: 269.0
+2025-08-22 07:16:21 - INFO - Predicted: 789.0, Actual: 779.0
+2025-08-22 07:16:21 - INFO - Epoch                                   3         
+2025-08-22 07:16:21 - INFO - Train Loss                              0.1494
+2025-08-22 07:16:21 - INFO - Test Loss                               0.1349
+2025-08-22 07:16:21 - INFO - Whole Num Acc                           96.110000%
+2025-08-22 07:16:21 - INFO - Digit-wise Acc                          99.079464%
+2025-08-22 07:16:21 - INFO - MSE                                     1512.109250
+2025-08-22 07:16:21 - INFO - R^2                                     0.990843383675017
+2025-08-22 07:16:21 - INFO - Learning Rate                           0.000025
+2025-08-22 07:16:21 - INFO - ----------------------------------------------------------------------------------------------------
+2025-08-22 07:16:21 - INFO - Starting Epoch 4/5

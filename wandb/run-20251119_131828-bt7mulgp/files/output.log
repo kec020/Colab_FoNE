@@ -1,0 +1,3 @@
+Generating train split: 20000 examples [00:00, 866546.98 examples/s]
+----
+ fourier embedding initing... int_digit_len = 7,  frac_digit_len = 5, period_base_list = [10.0], embedding dim= 384

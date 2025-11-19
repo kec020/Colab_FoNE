@@ -1,0 +1,8 @@
+config.json: 100%|█████████████████████████████████| 663/663 [00:00<00:00, 3.10MB/s]
+tokenizer_config.json: 7.30kB [00:00, 10.6MB/s]
+vocab.json: 2.78MB [00:00, 86.0MB/s]
+merges.txt: 1.67MB [00:00, 102MB/s]
+tokenizer.json: 7.03MB [00:00, 150MB/s]
+Generating train split: 20000 examples [00:00, 33387.48 examples/s]
+----
+ fourier embedding initing... int_digit_len = 7,  frac_digit_len = 5, period_base_list = [10.0], embedding dim= 384
