@@ -1,4 +1,6 @@
 import ast
+import json
+import os
 import re
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
@@ -58,20 +60,38 @@ class RouterEngine:
         for operation, path in expert_paths.items():
             if operation not in _OPERATION_TABLE:
                 raise RouterError(f"Unsupported operation '{operation}'")
-            config = AutoConfig.from_pretrained(path)
-            if hasattr(config, "layer_types") and isinstance(config.layer_types, (list, tuple)):
-                layer_types = list(config.layer_types)
-                if len(layer_types) != config.num_hidden_layers:
-                    if len(layer_types) > config.num_hidden_layers:
-                        config.layer_types = layer_types[:config.num_hidden_layers]
-                    else:
-                        if not layer_types:
-                            raise RouterError(
-                                f"Config for '{operation}' has no layer_types defined but expects"
-                                f" {config.num_hidden_layers} layers"
-                            )
-                        pad_value = layer_types[-1]
-                        config.layer_types = layer_types + [pad_value] * (config.num_hidden_layers - len(layer_types))
+            try:
+                config = AutoConfig.from_pretrained(path)
+            except ValueError as exc:
+                if "layer types" not in str(exc):
+                    raise
+                config_path = os.path.join(path, "config.json")
+                if not os.path.exists(config_path):
+                    raise RouterError(
+                        f"Config mismatch for '{operation}' and file '{config_path}' not found"
+                    ) from exc
+                with open(config_path, "r", encoding="utf-8") as cfg_file:
+                    config_dict = json.load(cfg_file)
+                num_layers = config_dict.get("num_hidden_layers")
+                layer_types = config_dict.get("layer_types", [])
+                if num_layers is None:
+                    raise RouterError(
+                        f"Config for '{operation}' missing 'num_hidden_layers'"
+                    ) from exc
+                if not isinstance(layer_types, list):
+                    raise RouterError(
+                        f"Config for '{operation}' has invalid 'layer_types'"
+                    ) from exc
+                if len(layer_types) > num_layers:
+                    layer_types = layer_types[:num_layers]
+                elif len(layer_types) < num_layers:
+                    if not layer_types:
+                        raise RouterError(
+                            f"Config for '{operation}' has empty 'layer_types' but requires {num_layers} entries"
+                        ) from exc
+                    layer_types = layer_types + [layer_types[-1]] * (num_layers - len(layer_types))
+                config_dict["layer_types"] = layer_types
+                config = AutoConfig.from_dict(config_dict)
             model = AutoModelForCausalLM.from_pretrained(path, config=config).to(self.device)
             tokenizer = AutoTokenizer.from_pretrained(path)
             model.eval()
