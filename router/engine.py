@@ -91,7 +91,13 @@ class RouterEngine:
                         ) from exc
                     layer_types = layer_types + [layer_types[-1]] * (num_layers - len(layer_types))
                 config_dict["layer_types"] = layer_types
-                config = AutoConfig.from_dict(config_dict)
+                model_type = config_dict.get("model_type")
+                if not model_type:
+                    raise RouterError(
+                        f"Config for '{operation}' missing 'model_type'"
+                    ) from exc
+                config_class = AutoConfig.for_model_type(model_type)
+                config = config_class.from_dict(config_dict)
             model = AutoModelForCausalLM.from_pretrained(path, config=config).to(self.device)
             tokenizer = AutoTokenizer.from_pretrained(path)
             model.eval()
