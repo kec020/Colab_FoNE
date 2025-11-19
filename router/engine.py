@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
 import torch
-from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
+from transformers import CONFIG_MAPPING, AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
 
 class RouterError(Exception):
@@ -96,7 +96,11 @@ class RouterEngine:
                     raise RouterError(
                         f"Config for '{operation}' missing 'model_type'"
                     ) from exc
-                config_class = AutoConfig.for_model_type(model_type)
+                config_class = CONFIG_MAPPING.get(model_type)
+                if config_class is None:
+                    raise RouterError(
+                        f"Unsupported model_type '{model_type}' for operation '{operation}'"
+                    ) from exc
                 config = config_class.from_dict(config_dict)
             model = AutoModelForCausalLM.from_pretrained(path, config=config).to(self.device)
             tokenizer = AutoTokenizer.from_pretrained(path)
