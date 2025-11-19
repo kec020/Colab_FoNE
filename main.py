@@ -38,6 +38,54 @@ def write_test_results_csv(filepath: str, records):
                 "correct": record.get("correct", "")
             })
 
+
+def sanitize_qwen_config(output_dir: str) -> None:
+    """Ensure Qwen configs have consistent layer_types entries."""
+    config_path = os.path.join(output_dir, "config.json")
+    if not os.path.exists(config_path):
+        return
+    try:
+        with open(config_path, "r", encoding="utf-8") as config_file:
+            config_data = json.load(config_file)
+    except (json.JSONDecodeError, OSError) as exc:
+        logging.warning(f"Failed to read config.json in {output_dir}: {exc}")
+        return
+
+    model_type = config_data.get("model_type")
+    num_layers = config_data.get("num_hidden_layers")
+    layer_types = config_data.get("layer_types")
+    if model_type != "qwen2" or not isinstance(num_layers, int):
+        return
+
+    if not isinstance(layer_types, list):
+        logging.warning(
+            f"config.json in {output_dir} has invalid layer_types: {type(layer_types)}"
+        )
+        return
+
+    if len(layer_types) == num_layers:
+        return
+
+    if len(layer_types) > num_layers:
+        layer_types = layer_types[:num_layers]
+    elif len(layer_types) == 0:
+        logging.warning(
+            f"config.json in {output_dir} has empty layer_types but needs {num_layers} entries"
+        )
+        return
+    else:
+        layer_types = layer_types + [layer_types[-1]] * (num_layers - len(layer_types))
+
+    config_data["layer_types"] = layer_types
+    try:
+        with open(config_path, "w", encoding="utf-8") as config_file:
+            json.dump(config_data, config_file, indent=2, sort_keys=True)
+        logging.info(
+            f"Sanitized config.json in {output_dir} so layer_types matches num_hidden_layers"
+        )
+    except OSError as exc:
+        logging.warning(f"Failed to write sanitized config.json in {output_dir}: {exc}")
+
 # Set environment variables for Hugging Face and WandB tokens
 #os.environ["HF_TOKEN"] = "{your_HF_token}"
 #os.environ["WANDB_API_KEY"] = "{your_WandB_API_key}"
@@ -156,6 +204,7 @@ def main():
     model.save_pretrained(args.model_save_path)
     tokenizer.save_pretrained(args.model_save_path)
     logging.info(f"Saved model and tokenizer to {args.model_save_path}")
+    sanitize_qwen_config(args.model_save_path)
 
     number_encoder_state = (training_summary or {}).get("number_encoder_state")
     number_encoder_config = (training_summary or {}).get("number_encoder_config")
