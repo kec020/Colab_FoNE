@@ -1,5 +1,6 @@
 import argparse
 import csv
+import json
 import os
 import re
 import logging
@@ -155,6 +156,18 @@ def main():
     model.save_pretrained(args.model_save_path)
     tokenizer.save_pretrained(args.model_save_path)
     logging.info(f"Saved model and tokenizer to {args.model_save_path}")
+
+    number_encoder_state = (training_summary or {}).get("number_encoder_state")
+    number_encoder_config = (training_summary or {}).get("number_encoder_config")
+    if number_encoder_state is not None:
+        number_encoder_weights_path = os.path.join(args.model_save_path, "number_encoder.pt")
+        torch.save(number_encoder_state, number_encoder_weights_path)
+        logging.info(f"Saved number encoder weights to {number_encoder_weights_path}")
+        if number_encoder_config is not None:
+            number_encoder_config_path = os.path.join(args.model_save_path, "number_encoder_config.json")
+            with open(number_encoder_config_path, 'w', encoding='utf-8') as config_file:
+                json.dump(number_encoder_config, config_file, indent=2, sort_keys=True)
+            logging.info(f"Saved number encoder config to {number_encoder_config_path}")
     
     wandb.finish()
 

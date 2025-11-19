@@ -24,6 +24,43 @@ from number_encoders.XVAL import XVAL
 from number_encoders.vanilla import VanillaEmbedding
 from utils.logger_utils import get_embedding_dim
 
+
+def _serialize_number_encoder(number_encoder, args, embedding_dim, metadata=None):
+    """Return CPU state dict and config for the active number encoder."""
+    if number_encoder is None:
+        return None, None
+
+    metadata = metadata or {}
+    state_dict = {
+        key: value.detach().cpu()
+        for key, value in number_encoder.state_dict().items()
+    }
+
+    config = {
+        "type": args.method,
+        "embedding_dim": embedding_dim,
+    }
+
+    if args.method == 'fne':
+        config.update({
+            "int_digit_len": args.int_digit_len,
+            "frac_digit_len": args.frac_digit_len,
+            "period_base_list": args.period_base_list,
+            "add_linear": args.add_linear,
+            "len_gen_size": args.len_gen_size,
+        })
+    elif args.method == 'vanilla':
+        config.update({
+            "int_digit_len": args.int_digit_len,
+            "frac_digit_len": args.frac_digit_len,
+        })
+    elif args.method == 'xval':
+        config.update({
+            "max_num": metadata.get("max_num"),
+        })
+
+    return state_dict, config
+
 # --- Standard Helper Functions ---
 
 def extract_max_num_from_dataset(dataset_name):
@@ -220,6 +257,7 @@ def create_dataloader_and_train(args, model, tokenizer, device):
 
     # Initialize the appropriate number encoder based on the method
     number_encoder = None
+    number_encoder_metadata = {}
     embedding_dim = get_embedding_dim(model)
     if args.method == 'fne':
         number_encoder = FNE(
@@ -240,11 +278,18 @@ def create_dataloader_and_train(args, model, tokenizer, device):
     elif args.method == 'xval':
         max_num = extract_max_num_from_dataset(args.dataset)
         number_encoder = XVAL(embedding_dim=embedding_dim, max_num=max_num, device=device).to(device)
+        number_encoder_metadata["max_num"] = max_num
     
     # If no training samples are specified, run evaluation only
     if args.num_train_samples == 0:
         test_loss, whole_acc, digit_acc, mse, r2, records = evaluate_model(
             model, test_loader, tok, number_encoder, args, device, stage="Single Evaluation"
+        )
+        number_encoder_state, number_encoder_config = _serialize_number_encoder(
+            number_encoder,
+            args,
+            embedding_dim,
+            number_encoder_metadata,
         )
         return {
             "stage": "Single Evaluation",
@@ -254,7 +299,9 @@ def create_dataloader_and_train(args, model, tokenizer, device):
             "mse": mse,
             "r2": r2,
             "records": records,
-            "epochs_completed": 0
+            "epochs_completed": 0,
+            "number_encoder_state": number_encoder_state,
+            "number_encoder_config": number_encoder_config,
         }
     
     optimizer, scheduler = initialize_optimizer_and_scheduler(model, train_loader, args)
@@ -273,6 +320,13 @@ def create_dataloader_and_train(args, model, tokenizer, device):
         model, test_loader, tok, number_encoder, args, device, stage="Final"
     )
 
+    number_encoder_state, number_encoder_config = _serialize_number_encoder(
+        number_encoder,
+        args,
+        embedding_dim,
+        number_encoder_metadata,
+    )
+
     return {
         "stage": "Final",
         "test_loss": test_loss,
@@ -281,5 +335,7 @@ def create_dataloader_and_train(args, model, tokenizer, device):
         "mse": mse,
         "r2": r2,
         "records": records,
-        "epochs_completed": epochs_completed
+        "epochs_completed": epochs_completed,
+        "number_encoder_state": number_encoder_state,
+        "number_encoder_config": number_encoder_config,
     }
