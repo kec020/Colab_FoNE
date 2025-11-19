@@ -7,6 +7,10 @@ from typing import Dict, List, Optional, Tuple
 
 import torch
 from transformers import CONFIG_MAPPING, AutoConfig, AutoModelForCausalLM, AutoTokenizer
+try:
+    from transformers import Qwen2Config  # type: ignore
+except ImportError:  # pragma: no cover
+    Qwen2Config = None
 
 
 class RouterError(Exception):
@@ -97,6 +101,8 @@ class RouterEngine:
                         f"Config for '{operation}' missing 'model_type'"
                     ) from exc
                 config_class = CONFIG_MAPPING.get(model_type)
+                if config_class is None and model_type == "qwen2" and Qwen2Config is not None:
+                    config_class = Qwen2Config
                 if config_class is None:
                     raise RouterError(
                         f"Unsupported model_type '{model_type}' for operation '{operation}'"
