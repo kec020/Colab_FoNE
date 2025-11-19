@@ -42,26 +42,42 @@ def preprocess(entry, is_tabular, method='regular'):
 
     if is_tabular:
         question, label = preprocess_entry(entry)
+        original_question = question
     else: # adjusted for gsm8k dataset
-        question = str(entry['question'])
-        answer_str = str(entry['answer'])
-        label = float(answer_str.split('####')[-1].strip().replace(',', '')) 
+            # question, label = str(entry["question"]), float(entry["label"])
+            question = str(entry['question'])
+            original_question = question
+            answer_str = str(entry['answer'])
+            matches = re.findall(r'\d+\.?\d*', answer_str)
+            label = matches[-1] if matches else float('nan')
+            # label = float(answer_str.split('####')[-1].strip().replace(',', '')) 
 
     if method in ['fne', 'xval', 'vanilla']:
         label = float(label)
         numbers = [float(num) for num in re.findall(r'\d+\.?\d*', question)]
-        question = re.sub(r'\d+\.?\d*', ' [NUM] ', question)
-        return {'question_with_num': question, 'numbers': numbers, 'label': label}
+        question_with_num = re.sub(r'\d+\.?\d*', ' [NUM] ', question)
+        return {
+            'question_with_num': question_with_num,
+            'numbers': numbers,
+            'label': label,
+            'raw_question': original_question
+        }
     elif method == 'regular':
-        return {'question': question, 'label': label}
+        return {'question': question, 'label': label, 'raw_question': original_question}
 
 
 def load_and_preprocess_dataset(dataset_name, tokenizer, num_train_samples=None, num_test_samples=None, method='regular'):
     """
     Loads and preprocesses a dataset.
     """
+
     is_tabular = 'tabular' in dataset_name if isinstance(dataset_name, str) else 'tabular' in dataset_name[0]
-    dataset = load_dataset(dataset_name) if isinstance(dataset_name, str) else load_dataset(*dataset_name)
+    dataset = (
+        load_dataset('csv', data_files={'train': dataset_name})
+        if isinstance(dataset_name, str) and dataset_name.endswith('.csv')
+        else load_dataset(dataset_name) if isinstance(dataset_name, str) else load_dataset(*dataset_name)
+    )
+    # dataset = load_dataset(dataset_name) if isinstance(dataset_name, str) else load_dataset(*dataset_name)
 
     if 'test' not in dataset:
         logging.info("Splitting train set into train and test splits.")
@@ -71,13 +87,16 @@ def load_and_preprocess_dataset(dataset_name, tokenizer, num_train_samples=None,
 
     def preprocess_entry(entry):
         result = preprocess(entry, is_tabular, method)
+        raw_question = result.get('raw_question', '')
         if method in ['fne', 'xval', 'vanilla']:
             input_text = result['question_with_num']
             input_ids = tokenizer.encode(input_text, return_tensors="pt").squeeze(0)
             return {
                 'input_ids': input_ids,
                 'numbers': result.get('numbers', []),
-                'label': result['label']
+                'label': result['label'],
+                'raw_question': raw_question,
+                'raw_label': result['label']
             }
         elif method == 'regular':
             question_text = result['question']
@@ -86,7 +105,9 @@ def load_and_preprocess_dataset(dataset_name, tokenizer, num_train_samples=None,
             question_len = len(tokenizer.encode(question_text, return_tensors="pt").squeeze())
             return {
                 'input_ids': input_ids,
-                'question_len': question_len
+                'question_len': question_len,
+                'raw_question': raw_question,
+                'raw_label': result['label']
             }
 
     train_data = (
@@ -118,12 +139,16 @@ def collate_fn(batch, tokenizer, num_token_id=None, max_length=128, method='regu
         for i, seq in enumerate(input_ids_padded):
             last_non_pad_idx = (seq != tokenizer.pad_token_id).nonzero()[-1].item()
             last_token_mask[i, last_non_pad_idx] = 1
+        raw_questions = [item.get('raw_question', '') for item in batch]
+        raw_labels = [item.get('raw_label') for item in batch]
         return {
             'input_ids': input_ids_padded,
             'scatter_tensor': scatter_tensor,
             'attention_mask': attention_mask,
             'labels': torch.tensor([item['label'] for item in batch], dtype=torch.float64),
-            'last_token_mask': last_token_mask
+            'last_token_mask': last_token_mask,
+            'raw_questions': raw_questions,
+            'raw_labels': raw_labels
         }
 
     elif method == 'regular':
@@ -134,8 +159,12 @@ def collate_fn(batch, tokenizer, num_token_id=None, max_length=128, method='regu
         loss_mask = (indices >= question_lens_tensor).float() * attention_mask.float()
         labels = input_ids_padded.clone()
         labels[loss_mask == 0] = -100  # Ignore tokens during loss calculation
+        raw_questions = [item.get('raw_question', '') for item in batch]
+        raw_labels = [item.get('raw_label') for item in batch]
         return {
             'input_ids': input_ids_padded,
             'attention_mask': attention_mask,
-            'labels': labels
+            'labels': labels,
+            'raw_questions': raw_questions,
+            'raw_labels': raw_labels
         }

@@ -18,10 +18,10 @@ def train_fne(model, train_loader, fne, optimizer, scheduler, args, int_digit_le
         last_token_mask = batch['last_token_mask'].to(device)
         len_gen = torch.randint(0, len_gen_size+1, (1,), device=device).item()
         
-        regular_embeddings = get_regular_embeddings(model, input_ids)
+        regular_embeddings = get_regular_embeddings(model, input_ids).to(device)
         fourier_embeddings = fne(scatter_tensor, len_gen=len_gen)
-        fourier_embeddings = fourier_embeddings.to(regular_embeddings.dtype)
-        input_embeddings = regular_embeddings + fourier_embeddings
+        fourier_embeddings = fourier_embeddings.to(regular_embeddings.dtype).to(device)
+        input_embeddings = (regular_embeddings + fourier_embeddings).to(model.dtype)
 
         outputs = model(inputs_embeds=input_embeddings, attention_mask=attention_mask, output_hidden_states=True)
         before_decoder = outputs.hidden_states[-1]

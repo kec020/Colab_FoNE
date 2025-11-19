@@ -118,24 +118,24 @@ def run_epoch(model, train_loader, test_loader, optimizer, scheduler, number_enc
     """
     if args.method == 'regular':
         train_loss = train_regular(model, train_loader, optimizer, scheduler, device, args)
-        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2 = evaluate_regular(
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, _ = evaluate_regular(
             model, test_loader, tokenizer, device, print_labels=True, max_print_examples=5
         )
     elif args.method == 'fne':
         train_loss = train_fne(model, train_loader, number_encoder, optimizer, scheduler, args,
                                args.int_digit_len, args.frac_digit_len, args.len_gen_size, device)
-        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2 = evaluate_fne(
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, _ = evaluate_fne(
             model, test_loader, number_encoder, args.int_digit_len, args.frac_digit_len, device,
             print_labels=True, max_print=5
         )
     elif args.method == 'xval':
         train_loss = train_xval(model, train_loader, number_encoder, optimizer, scheduler, args, device)
-        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2 = evaluate_xval(
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, _ = evaluate_xval(
             model, test_loader, number_encoder, device, print_labels=True, max_print=5
         )
     elif args.method == 'vanilla':
         train_loss = train_vanilla(model, train_loader, number_encoder, optimizer, scheduler, args, device)
-        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2 = evaluate_vanilla(
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, _ = evaluate_vanilla(
             model, test_loader, number_encoder, device, print_labels=True, max_print=5
         )
     else:
@@ -170,16 +170,20 @@ def evaluate_model(model, test_loader, tokenizer, number_encoder, args, device, 
     logging.info(f"Starting {stage} evaluation.")
     
     if args.method == 'regular':
-        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2 = evaluate_regular(
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, records = evaluate_regular(
             model, test_loader, tokenizer, device, print_labels=True, max_print_examples=10
         )
     elif args.method == 'fne':
-        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2 = evaluate_fne(
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, records = evaluate_fne(
             model, test_loader, number_encoder, args.int_digit_len, args.frac_digit_len, device,
             print_labels=True, max_print=5
         )
     elif args.method == 'xval':
-        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2 = evaluate_xval(
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, records = evaluate_xval(
+            model, test_loader, number_encoder, device, print_labels=True, max_print=5
+        )
+    elif args.method == 'vanilla':
+        test_loss, (whole_number_accuracy, digit_wise_accuracy), mse, r2, records = evaluate_vanilla(
             model, test_loader, number_encoder, device, print_labels=True, max_print=5
         )
     else:
@@ -200,7 +204,7 @@ def evaluate_model(model, test_loader, tokenizer, number_encoder, args, device, 
         f"{stage.lower()}_r2": r2
     })
     
-    return test_loss, whole_number_accuracy, digit_wise_accuracy, mse, r2
+    return test_loss, whole_number_accuracy, digit_wise_accuracy, mse, r2, records
 
 # --- Main DataLoader & Training Pipeline ---
 
@@ -239,17 +243,43 @@ def create_dataloader_and_train(args, model, tokenizer, device):
     
     # If no training samples are specified, run evaluation only
     if args.num_train_samples == 0:
-        evaluate_model(model, test_loader, tok, number_encoder, args, device, stage="Single Evaluation")
-        return
+        test_loss, whole_acc, digit_acc, mse, r2, records = evaluate_model(
+            model, test_loader, tok, number_encoder, args, device, stage="Single Evaluation"
+        )
+        return {
+            "stage": "Single Evaluation",
+            "test_loss": test_loss,
+            "whole_number_accuracy": whole_acc,
+            "digit_wise_accuracy": digit_acc,
+            "mse": mse,
+            "r2": r2,
+            "records": records,
+            "epochs_completed": 0
+        }
     
     optimizer, scheduler = initialize_optimizer_and_scheduler(model, train_loader, args)
-    
+    epochs_completed = 0
+
     for epoch in range(args.epochs):
         logging.info('-' * 100)
         logging.info(f"Starting Epoch {epoch + 1}/{args.epochs}")
         whole_number_accuracy = run_epoch(model, train_loader, test_loader, optimizer, scheduler, number_encoder, args, epoch, device, tok)
+        epochs_completed = epoch + 1
         if whole_number_accuracy == 1.0:
             logging.info("Stopping early as whole number accuracy reached 100%.")
             break
-    
-    evaluate_model(model, test_loader, tok, number_encoder, args, device, stage="Final")
+
+    test_loss, whole_acc, digit_acc, mse, r2, records = evaluate_model(
+        model, test_loader, tok, number_encoder, args, device, stage="Final"
+    )
+
+    return {
+        "stage": "Final",
+        "test_loss": test_loss,
+        "whole_number_accuracy": whole_acc,
+        "digit_wise_accuracy": digit_acc,
+        "mse": mse,
+        "r2": r2,
+        "records": records,
+        "epochs_completed": epochs_completed
+    }

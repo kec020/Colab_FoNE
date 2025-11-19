@@ -27,4 +27,7 @@ def get_regular_embeddings(model, input_ids):
     """
     Returns the token embeddings based on the model type, handling PEFT wrappers.
     """
-    return model.get_input_embeddings()(input_ids)
+    embed_layer = model.get_input_embeddings()
+    input_ids = input_ids
+    return embed_layer(input_ids)
+    # return model.get_input_embeddings()(input_ids)

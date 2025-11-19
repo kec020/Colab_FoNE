@@ -1,5 +1,7 @@
 import argparse
+import csv
 import os
+import re
 import logging
 import torch
 import wandb
@@ -10,6 +12,30 @@ from train.train_pipeline import (
     parse_period_base_list,
     create_dataloader_and_train
 )
+
+
+def sanitize_filename(value: str) -> str:
+    """Convert an arbitrary string into a filesystem-friendly name."""
+    sanitized = re.sub(r'[^A-Za-z0-9._-]+', '_', value.strip())
+    return sanitized or 'output'
+
+
+def write_test_results_csv(filepath: str, records):
+    """Persist evaluation records into a CSV file."""
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    fieldnames = ["index", "question", "label", "prediction", "abs_error", "correct"]
+    with open(filepath, 'w', newline='') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for idx, record in enumerate(records or []):
+            writer.writerow({
+                "index": idx,
+                "question": record.get("question", ""),
+                "label": record.get("label", ""),
+                "prediction": record.get("prediction", ""),
+                "abs_error": record.get("abs_error", ""),
+                "correct": record.get("correct", "")
+            })
 
 # Set environment variables for Hugging Face and WandB tokens
 #os.environ["HF_TOKEN"] = "{your_HF_token}"
@@ -22,7 +48,7 @@ def main():
     )
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training and testing')
     parser.add_argument('--epochs', type=int, default=5, help='Number of epochs for training')
-    parser.add_argument('--int_digit_len', type=int, default=5, help='Number of digits for integer part')
+    parser.add_argument('--int_digit_len', type=int, default=7, help='Number of digits for integer part')
     parser.add_argument('--frac_digit_len', type=int, default=5, help='Number of digits for fractional part')
     parser.add_argument('--len_gen_size', type=int, default=0, help='FNE: add k 0s after numbers to len gen')
     parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate')
@@ -40,6 +66,8 @@ def main():
     parser.add_argument('--period_base_list', type=str, nargs='+', default=['10'], help='List of period bases for Fourier embedding (e.g., 2, 5, 1/3)')
     parser.add_argument('--clip', action='store_true', help='Enable clipping')
     parser.add_argument('--not_add_linear', action='store_true', help='Do not add linear layer after FNE')
+    parser.add_argument('--test_results_filename', type=str, default='', help='Filename to use when saving test predictions to CSV')
+    parser.add_argument('--model_save_name', type=str, default='', help='Directory name for saving the trained model artifacts')
     
     # Added flag argument to enable LoRA to reduce memory usage
     parser.add_argument('--use_lora', action='store_true', help='Use LoRA for training')
@@ -51,6 +79,32 @@ def main():
     args.period_base_list = parse_period_base_list(args.period_base_list)
     
     run_name = f"{args.name}{args.method}_{args.model}_{args.dataset}_seed{args.seed}"
+    sanitized_run_name = sanitize_filename(run_name)
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    test_results_dir = os.path.join(base_dir, "test_results")
+    models_dir = os.path.join(base_dir, "models")
+    os.makedirs(test_results_dir, exist_ok=True)
+    os.makedirs(models_dir, exist_ok=True)
+
+    results_filename = args.test_results_filename.strip()
+    if results_filename:
+        results_filename = sanitize_filename(results_filename)
+        if not results_filename.lower().endswith('.csv'):
+            results_filename += '.csv'
+    else:
+        results_filename = f"{sanitized_run_name}.csv"
+    test_results_path = os.path.join(test_results_dir, results_filename)
+
+    model_dir_name = args.model_save_name.strip() or sanitized_run_name
+    model_dir_name = sanitize_filename(model_dir_name)
+    model_save_path = os.path.join(models_dir, model_dir_name)
+
+    args.test_results_filename = results_filename
+    args.test_results_path = test_results_path
+    args.model_save_name = model_dir_name
+    args.model_save_path = model_save_path
+
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     torch.manual_seed(args.seed)
@@ -68,6 +122,8 @@ def main():
     
     logging.info(output_folder)
     logging.info(args)
+    logging.info(f"Test results will be saved to: {args.test_results_path}")
+    logging.info(f"Model artifacts will be saved to: {args.model_save_path}")
     
     if ',' in args.dataset:
         args.dataset = tuple(args.dataset.split(','))
@@ -86,7 +142,19 @@ def main():
     )
     
     # Run the training pipeline
-    create_dataloader_and_train(args, model, tokenizer, device)
+    training_summary = create_dataloader_and_train(args, model, tokenizer, device)
+
+    records = (training_summary or {}).get("records", [])
+    write_test_results_csv(args.test_results_path, records)
+    logging.info(f"Saved test predictions CSV with {len(records)} rows to {args.test_results_path}")
+
+    existing_artifacts = os.path.isdir(args.model_save_path) and os.listdir(args.model_save_path)
+    if existing_artifacts:
+        logging.warning(f"Model save directory '{args.model_save_path}' already exists and will be overwritten.")
+    os.makedirs(args.model_save_path, exist_ok=True)
+    model.save_pretrained(args.model_save_path)
+    tokenizer.save_pretrained(args.model_save_path)
+    logging.info(f"Saved model and tokenizer to {args.model_save_path}")
     
     wandb.finish()
 

@@ -242,6 +242,7 @@ def main():
     # Backward pass timing
     backward_start_time = time.time()
     total_loss.backward()  # Compute gradients
+    optimizer.step()
     backward_time = time.time() - backward_start_time
     print(f"Backward pass took: {backward_time:.4f} seconds")
 
