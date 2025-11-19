@@ -1,0 +1,11 @@
+{
+  "add_linear": true,
+  "embedding_dim": 384,
+  "frac_digit_len": 5,
+  "int_digit_len": 7,
+  "len_gen_size": 0,
+  "period_base_list": [
+    10.0
+  ],
+  "type": "fne"
+}
