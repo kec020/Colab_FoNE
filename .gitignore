@@ -9,7 +9,7 @@ __pycache__/
 dataset/llama*
 # C extensions
 *.so
-# *safetensors
+*safetensors
 wandb/
 
 hg_cache/
