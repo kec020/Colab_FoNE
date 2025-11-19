@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
 
 class RouterError(Exception):
@@ -58,7 +58,21 @@ class RouterEngine:
         for operation, path in expert_paths.items():
             if operation not in _OPERATION_TABLE:
                 raise RouterError(f"Unsupported operation '{operation}'")
-            model = AutoModelForCausalLM.from_pretrained(path).to(self.device)
+            config = AutoConfig.from_pretrained(path)
+            if hasattr(config, "layer_types") and isinstance(config.layer_types, (list, tuple)):
+                layer_types = list(config.layer_types)
+                if len(layer_types) != config.num_hidden_layers:
+                    if len(layer_types) > config.num_hidden_layers:
+                        config.layer_types = layer_types[:config.num_hidden_layers]
+                    else:
+                        if not layer_types:
+                            raise RouterError(
+                                f"Config for '{operation}' has no layer_types defined but expects"
+                                f" {config.num_hidden_layers} layers"
+                            )
+                        pad_value = layer_types[-1]
+                        config.layer_types = layer_types + [pad_value] * (config.num_hidden_layers - len(layer_types))
+            model = AutoModelForCausalLM.from_pretrained(path, config=config).to(self.device)
             tokenizer = AutoTokenizer.from_pretrained(path)
             model.eval()
             self._experts[operation] = ExpertModel(model=model, tokenizer=tokenizer, operation=operation)
