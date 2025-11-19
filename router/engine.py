@@ -315,7 +315,6 @@ class RouterEngine:
         tokenizer = expert.tokenizer
         numbers = [float(match.group()) for match in _NUMBER_PATTERN.finditer(prompt)]
         placeholder_text = _NUMBER_PATTERN.sub(" [NUM] ", prompt)
-        placeholder_text = " ".join(placeholder_text.split())
         encoded = tokenizer(placeholder_text, return_tensors="pt")
         input_ids = encoded["input_ids"].to(self.device)
         attention_mask = encoded["attention_mask"].to(self.device)
