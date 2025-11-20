@@ -101,7 +101,12 @@ def load_and_prepare_data(args, tokenizer):
     """
     from utils.data_utils import load_and_preprocess_dataset  # Local import if needed
     train_data, test_data = load_and_preprocess_dataset(
-        args.dataset, tokenizer, args.num_train_samples, args.num_test_samples, method=args.method
+        args.dataset,
+        tokenizer,
+        args.num_train_samples,
+        args.num_test_samples,
+        method=args.method,
+        evaluate_only=getattr(args, "evaluate_only", False)
     )
     logging.info(f"2 data example: {train_data[:2]}")
     num_token = tokenizer.convert_tokens_to_ids("[NUM]") if args.method in ['fne', 'xval', 'vanilla'] else None
@@ -111,8 +116,8 @@ def create_data_loaders(train_data, test_data, tokenizer, num_token, args):
     """
     Creates DataLoaders for training and testing (for text-based datasets).
     """
-    if args.num_train_samples == 0:
-        logging.info("Skipping training as num_train_samples is set to 0.")
+    if getattr(args, "evaluate_only", False) or args.num_train_samples == 0 or not train_data:
+        logging.info("Skipping training and using evaluation-only mode.")
         train_loader = None
     else:
         train_loader = DataLoader(
@@ -281,7 +286,7 @@ def create_dataloader_and_train(args, model, tokenizer, device):
         number_encoder_metadata["max_num"] = max_num
     
     # If no training samples are specified, run evaluation only
-    if args.num_train_samples == 0:
+    if getattr(args, "evaluate_only", False) or args.num_train_samples == 0:
         test_loss, whole_acc, digit_acc, mse, r2, records = evaluate_model(
             model, test_loader, tok, number_encoder, args, device, stage="Single Evaluation"
         )

@@ -120,6 +120,7 @@ def main():
     
     # Added flag argument to enable LoRA to reduce memory usage
     parser.add_argument('--use_lora', action='store_true', help='Use LoRA for training')
+    parser.add_argument('--evaluate_only', action='store_true', help='Skip training and evaluate the entire dataset')
 
     args = parser.parse_args()
     
@@ -154,17 +155,23 @@ def main():
     args.model_save_name = model_dir_name
     args.model_save_path = model_save_path
 
+    if args.evaluate_only:
+        args.num_train_samples = 0
+
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     torch.manual_seed(args.seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(args.seed)
     
-    wandb.init(
-        project="FoNE_Qwen",
-        config=vars(args),
-        name=run_name
-    )
+    if os.environ.get("WANDB_DISABLED", "0") == "1" or getattr(args, "disable_wandb", False):
+        os.environ["WANDB_MODE"] = "offline"
+    else:
+        wandb.init(
+            project="FoNE_Qwen",
+            config=vars(args),
+            name=run_name
+        )
     
     output_folder = get_output_folder(args)
     setup_logger(output_folder)
@@ -218,7 +225,8 @@ def main():
                 json.dump(number_encoder_config, config_file, indent=2, sort_keys=True)
             logging.info(f"Saved number encoder config to {number_encoder_config_path}")
     
-    wandb.finish()
+    if wandb.run is not None:
+        wandb.finish()
 
 if __name__ == "__main__":
     main()

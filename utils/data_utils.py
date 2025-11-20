@@ -66,7 +66,14 @@ def preprocess(entry, is_tabular, method='regular'):
         return {'question': question, 'label': label, 'raw_question': original_question}
 
 
-def load_and_preprocess_dataset(dataset_name, tokenizer, num_train_samples=None, num_test_samples=None, method='regular'):
+def load_and_preprocess_dataset(
+    dataset_name,
+    tokenizer,
+    num_train_samples=None,
+    num_test_samples=None,
+    method='regular',
+    evaluate_only=False,
+):
     """
     Loads and preprocesses a dataset.
     """
@@ -78,12 +85,6 @@ def load_and_preprocess_dataset(dataset_name, tokenizer, num_train_samples=None,
         else load_dataset(dataset_name) if isinstance(dataset_name, str) else load_dataset(*dataset_name)
     )
     # dataset = load_dataset(dataset_name) if isinstance(dataset_name, str) else load_dataset(*dataset_name)
-
-    if 'test' not in dataset:
-        logging.info("Splitting train set into train and test splits.")
-        dataset = split_dataset(dataset['train'])
-
-    logging.info(f"Train dataset length: {len(dataset['train'])}, Test dataset length: {len(dataset['test'])}")
 
     def preprocess_entry(entry):
         result = preprocess(entry, is_tabular, method)
@@ -109,6 +110,29 @@ def load_and_preprocess_dataset(dataset_name, tokenizer, num_train_samples=None,
                 'raw_question': raw_question,
                 'raw_label': result['label']
             }
+
+    if evaluate_only:
+        logging.info("Evaluation-only mode: using entire dataset for testing.")
+        splits_to_process = []
+        if isinstance(dataset, dict):
+            splits_to_process = list(dataset.values())
+        else:
+            splits_to_process = [dataset]
+
+        processed_entries = []
+        for split in splits_to_process:
+            processed_entries.extend(preprocess_entry(entry) for entry in split)
+
+        if num_test_samples is not None:
+            processed_entries = processed_entries[:num_test_samples]
+
+        return [], processed_entries
+
+    if 'test' not in dataset:
+        logging.info("Splitting train set into train and test splits.")
+        dataset = split_dataset(dataset['train'])
+
+    logging.info(f"Train dataset length: {len(dataset['train'])}, Test dataset length: {len(dataset['test'])}")
 
     train_data = (
         [preprocess_entry(entry) for entry in dataset['train'].select(range(num_train_samples))]
