@@ -23,18 +23,33 @@ def sanitize_filename(value: str) -> str:
 
 def write_test_results_csv(filepath: str, records):
     """Persist evaluation records into a CSV file."""
+
+    DEFAULT_DECIMALS = 4
+
+    def _determine_decimals(value):
+        try:
+            return max(int(value), 0)
+        except (TypeError, ValueError):
+            return DEFAULT_DECIMALS
+
+    def _format_value(value, decimals):
+        if isinstance(value, float):
+            return f"{value:.{decimals}f}"
+        return value
+
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     fieldnames = ["index", "question", "label", "prediction", "abs_error", "correct"]
     with open(filepath, 'w', newline='') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames, extrasaction='ignore')
         writer.writeheader()
         for idx, record in enumerate(records or []):
+            decimals = _determine_decimals(record.get("round_decimals", DEFAULT_DECIMALS))
             writer.writerow({
                 "index": idx,
                 "question": record.get("question", ""),
-                "label": record.get("label", ""),
-                "prediction": record.get("prediction", ""),
-                "abs_error": record.get("abs_error", ""),
+                "label": _format_value(record.get("label", ""), decimals),
+                "prediction": _format_value(record.get("prediction", ""), decimals),
+                "abs_error": _format_value(record.get("abs_error", ""), decimals),
                 "correct": record.get("correct", "")
             })
 
